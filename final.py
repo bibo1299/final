@@ -35,6 +35,7 @@ class BLOCK(GameSprite):
         self.sdig_x=sdig_x
         self.sdig_y=sdig_y
 
+
     def update(self,t1):
         self.rect.x= t1.rect.x+self.sdig_x
         self.rect.y= t1.rect.y+self.sdig_y
@@ -42,10 +43,60 @@ class BLOCK(GameSprite):
         if self.rect.y<400:
             self.cppium()
             self.kill()
+   
+    
+
+   
+
             
     def cppium(self):
         t9 = BLOCK(self.im, self.rect.x,self.rect.y, self.size_x, self.size_y, 0,0,0)
         cop.add(t9)
+
+class deleter(GameSprite):
+    def __init__(self,player_image,  player_x, player_y, size_x, size_y,player_speed,sdig_x,sdig_y):
+        super().__init__( player_image,  player_x, player_y, size_x, size_y,player_speed)
+        self.delete=True
+    def update1(self):
+        
+        for j in range(6):
+            count=0
+            for i in range(6):
+                self.rect.x=110+i*50
+                #print(self.rect.x,self.rect.y,sprite.spritecollide(self, cop, False))
+                if not sprite.spritecollide(self, cop, False):
+                    self.delete=False
+            if self.delete:
+                count+=1
+                for i in range(11):
+                    self.rect.x=110+i*50
+                    if sprite.spritecollide(self, cop, True):
+                        pass
+            self.delete=True
+            self.rect.y=60+j*50
+        return count
+
+    def update2(self):
+        
+        for j in range(6):
+            count=0
+            for i in range(6):
+                self.rect.y=60+i*50
+                #print(self.rect.x,self.rect.y,sprite.spritecollide(self, cop, False))
+                if not sprite.spritecollide(self, cop, False):
+                    self.delete=False
+            if self.delete:
+                count+=1
+                for i in range(9):
+                    self.rect.y=60+i*50
+                    if sprite.spritecollide(self, cop, True):
+                        pass
+            self.delete=True
+            self.rect.x=110+j*50
+        return count
+        
+
+        
 
 
 
@@ -77,6 +128,7 @@ for i in range(7):
     tt = GameSprite("New Piskel (10).png",100,50+50*i, 300, 2, 1)
     lini.add(tt)
 t1 = BLOCK('bgqwe.jpg', 100,500, 50, 50 ,0,0,0)
+delet = deleter('bgqwe.jpg', 0,0, 5, 30 ,0,0,0)
 blocks = sprite.Group()
 def create_ge(blocks):
     global t1
@@ -113,7 +165,7 @@ def create_yy(blocks):
     blocks.add(t5)
     blocks.update(t1)
 
-
+count=0
 u=1
 back = (80, 80, 80)
 run = True
@@ -138,6 +190,7 @@ def drug(t1,x,y):
                     t1.rect.x=x
                     t1.rect.y=y
                     blocks.update(t1)
+                    
                     k=randint(0,2)
                     if k==0:
                         create_ge(blocks)
@@ -159,8 +212,12 @@ while run:
             run = False
         if e.type == MOUSEBUTTONDOWN and e.button == 1:
             
+            print(count)
+            
             x, y = e.pos
             drug(t1,x,y)
+            count+=delet.update1()
+            count+=delet.update2()
 
                 
                     
